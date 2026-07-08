@@ -18,15 +18,15 @@ export async function GET(request, { params }) {
     return Response.json(user);
 }
 
-// Update user by Ids
-export async function  POST(params) {
+// // Update user by Ids
+// export async function POST(params) {
 
-   const body = await request.json();
-   
-   const index = users.findIndex((item) => {
-      item.id === item.params
-   })
+//     const body = await request.json();
 
-   const 
+//     const index = users.findIndex((item) => {
+//         item.id === item.params
+//     })
 
-}
+//     const
+
+// }
