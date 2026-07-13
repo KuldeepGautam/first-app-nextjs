@@ -1,32 +1,93 @@
-import { users } from "../../../../data";
+import db from "../../../lib/db";
 
-// Get User by Ids
+// Get User by ID
 export async function GET(request, { params }) {
+  try {
     const { id } = await params;
 
-    const user = users.find(
-        (item) => item.id === Number(id)
+    const [rows] = await db.query(
+      "SELECT * FROM users WHERE id = ?",
+      [id]
     );
 
-    if (!user) {
-        return Response.json(
-            { message: "User not found" },
-            { status: 404 }
-        );
+    if (rows.length === 0) {
+      return Response.json(
+        {
+          success: false,
+          message: "User not found",
+        },
+        { status: 404 }
+      );
     }
 
-    return Response.json(user);
+    return Response.json({
+      success: true,
+      data: rows[0],
+    });
+  } catch (error) {
+    return Response.json(
+      {
+        success: false,
+        message: error.message,
+      },
+      { status: 500 }
+    );
+  }
 }
 
-// // Update user by Ids
-// export async function POST(params) {
+// Update user by Ids
+export async function PUT(request, {params}) {
+    try {
 
-//     const body = await request.json();
+        const {id} = await params;
 
-//     const index = users.findIndex((item) => {
-//         item.id === item.params
-//     })
+        const body = await request.json();
 
-//     const
+        const { name, email, age } = body;
 
-// }
+        // Check if user exists
+        const [user] = await db.query(
+            "SELECT * FROM users WHERE id = ?",
+            [id]
+        );
+
+        if(user.length === 0){
+            return Response.json(
+                {
+                    success: false,
+                    message: "User not found...!"
+                },
+                {
+                    status: 404
+                }
+            )
+        }
+
+        // Update user
+        await db.query(
+            "UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?",
+            [name, email, age, id]
+        );
+        
+        return Response.json(
+            {
+                success: true,
+                message: 'Data updated successfully...!'
+            },
+            {
+                status: 200
+            }
+        )
+
+    } catch (error) {
+          return Response.json(
+            {
+                success: false,
+                message: error.message
+            },
+            {
+                status: 500
+            }
+          )
+    }
+}
