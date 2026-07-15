@@ -7,23 +7,20 @@ export async function GET() {
     const user = await verifyUser();
 
     if(!user){ 
-        try {
-    
-            const [rows] = await db.query("SELECT * FROM users");
-            
-            return Response.json(rows);
-    
-        } catch (error) {
-    
-            return Response.json(
-                {
-                    message: error.message,
-                },
-                {
-                    status: 500
-                }
-            )
-        }
+        return Response.json(
+            { success: false, message: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+
+    try {
+        const [rows] = await db.query("SELECT * FROM users");
+        return Response.json(rows);
+    } catch (error) {
+        return Response.json(
+            { message: error.message },
+            { status: 500 }
+        )
     }
 }
 
