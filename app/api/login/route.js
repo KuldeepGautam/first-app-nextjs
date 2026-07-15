@@ -1,83 +1,94 @@
 import db from "../../lib/db";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
-// Get all user
-export async function GET() {
-
-    try {
-
-        const [rows] = await db.query("SELECT * FROM users");
-
-        return Response.json(rows);
-
-    } catch (error) {
-
-        return Response.json(
-            {
-                message: error.message,
-            },
-            {
-                status: 500
-            }
-        )
-    }
-}
-
-// Creagte New User
 export async function POST(request) {
+  try {
 
-    try {
-        const body = await request.json();
+    const { email, password } = await request.json();
 
-        const { name, email, age } = body;
-
-        const [duplicateUser] = await db.query(
-            "SELECT * FROM users WHERE email = ?",
-            [email]
-        );
-
-        if (duplicateUser.length > 0) {
-            return Response.json(
-                {
-                    success: false,
-                    message: "User already exist..!"
-                },
-                {
-                    status: 409
-                }
-            )
-        }
-
-        // Insert into DB
-        const [result] = await db.query(
-            "INSERT INTO users (name, email, age) VALUES (?, ?, ?)",
-            [name, email, age]
-        )
-
-        return Response.json(
-            {
-                success: true,
-                message: 'Data submitted successfully..!',
-                data: {
-                    id: result.insertId,
-                    name,
-                    email,
-                    age
-                }
-            },
-            {
-                status: 201
-            },
-
-        )
-    } catch (error) {
-        return Response.json(
-            {
-                success: false,
-                message: error.message,
-            },
-            {
-                status: 500
-            }
-        )
+    if (!email || !password) {
+      return Response.json(
+        {
+          success: false,
+          message: "Email and Password are required"
+        },
+        { status: 400 }
+      );
     }
+
+    const [rows] = await db.query(
+      "SELECT * FROM login WHERE email=?",
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return Response.json(
+        {
+          success: false,
+          message: "Invalid Email"
+        },
+        { status: 401 }
+      );
+    }
+
+    const user = rows[0];
+
+    const match = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!match) {
+      return Response.json(
+        {
+          success: false,
+          message: "Invalid Password"
+        },
+        { status: 401 }
+      );
+    }
+
+    const token = jwt.sign(
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "2h"
+      }
+    );
+
+    const cookieStore = await cookies();
+
+    cookieStore.set("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 2
+    });
+
+    return Response.json({
+      success: true,
+      message: "Login Successful",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    });
+
+  } catch (err) {
+    return Response.json(
+      {
+        success: false,
+        message: err.message
+      },
+      { status: 500 }
+    );
+  }
 }
