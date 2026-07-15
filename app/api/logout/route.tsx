@@ -1,13 +1,35 @@
 import { cookies } from "next/headers";
 
-export async function POST(){
-
+export async function POST() {
+  try {
     const cookieStore = await cookies();
 
-    cookieStore.delete("token");
-
-    return Response.json({
-        success:true
+    cookieStore.set("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
+      expires: new Date(0),
     });
 
+    return Response.json(
+      {
+        success: true,
+        message: "Logged out successfully.",
+      },
+      {
+        status: 200,
+      }
+    );
+  } catch (error) {
+    return Response.json(
+      {
+        success: false,
+        message: error.message,
+      },
+      {
+        status: 500,
+      }
+    );
+  }
 }

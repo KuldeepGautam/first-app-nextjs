@@ -26,6 +26,15 @@ export async function GET() {
 
 // Creagte New User
 export async function POST(request) {
+    
+    const user = await verifyUser();
+
+    if(!user){ 
+        return Response.json(
+            { success: false, message: "Unauthorized" },
+            { status: 401 }
+        );
+    }
 
     try {
         const body = await request.json();
