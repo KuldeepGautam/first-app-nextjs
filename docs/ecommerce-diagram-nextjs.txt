@@ -1,0 +1,143 @@
+ecommerce-nextjs/
+│
+├── public/
+│   ├── images/
+│   ├── icons/
+│   └── banners/
+│
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── login/
+│   │   │   ├── register/
+│   │   │   └── forgot-password/
+│   │   │
+│   │   ├── (shop)/
+│   │   │   ├── page.tsx                  // Home
+│   │   │   ├── products/
+│   │   │   │   ├── page.tsx              // Product Listing
+│   │   │   │   ├── [id]/
+│   │   │   │   │   └── page.tsx          // Product Details
+│   │   │   │   └── loading.tsx
+│   │   │   │
+│   │   │   ├── categories/
+│   │   │   ├── cart/
+│   │   │   ├── wishlist/
+│   │   │   ├── checkout/
+│   │   │   ├── orders/
+│   │   │   └── profile/
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── dashboard/
+│   │   │   ├── products/
+│   │   │   ├── categories/
+│   │   │   ├── users/
+│   │   │   └── orders/
+│   │   │
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   ├── products/
+│   │   │   ├── categories/
+│   │   │   ├── cart/
+│   │   │   └── orders/
+│   │   │
+│   │   ├── layout.tsx
+│   │   ├── loading.tsx
+│   │   ├── error.tsx
+│   │   ├── not-found.tsx
+│   │   └── globals.css
+│   │
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Input.tsx
+│   │   │   ├── Loader.tsx
+│   │   │   ├── Modal.tsx
+│   │   │   └── Pagination.tsx
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Navbar.tsx
+│   │   │   └── Sidebar.tsx
+│   │   │
+│   │   ├── home/
+│   │   │   ├── Hero.tsx
+│   │   │   ├── FeaturedProducts.tsx
+│   │   │   ├── Categories.tsx
+│   │   │   └── Offers.tsx
+│   │   │
+│   │   ├── product/
+│   │   │   ├── ProductCard.tsx
+│   │   │   ├── ProductGrid.tsx
+│   │   │   ├── ProductDetails.tsx
+│   │   │   ├── ProductGallery.tsx
+│   │   │   └── ProductReview.tsx
+│   │   │
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   ├── wishlist/
+│   │   └── profile/
+│   │
+│   ├── services/
+│   │   ├── api.ts
+│   │   ├── auth.service.ts
+│   │   ├── product.service.ts
+│   │   ├── cart.service.ts
+│   │   ├── order.service.ts
+│   │   └── user.service.ts
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   ├── useCart.ts
+│   │   ├── useWishlist.ts
+│   │   └── useDebounce.ts
+│   │
+│   ├── store/                 // Redux Toolkit / Zustand
+│   │   ├── index.ts
+│   │   ├── authSlice.ts
+│   │   ├── cartSlice.ts
+│   │   ├── productSlice.ts
+│   │   └── wishlistSlice.ts
+│   │
+│   ├── context/
+│   │   ├── AuthContext.tsx
+│   │   └── ThemeContext.tsx
+│   │
+│   ├── lib/
+│   │   ├── axios.ts
+│   │   ├── auth.ts
+│   │   ├── cookies.ts
+│   │   └── utils.ts
+│   │
+│   ├── types/
+│   │   ├── product.ts
+│   │   ├── user.ts
+│   │   ├── cart.ts
+│   │   └── order.ts
+│   │
+│   ├── schemas/
+│   │   ├── login.schema.ts
+│   │   ├── register.schema.ts
+│   │   └── checkout.schema.ts
+│   │
+│   ├── constants/
+│   │   ├── api.ts
+│   │   ├── routes.ts
+│   │   └── messages.ts
+│   │
+│   ├── utils/
+│   │   ├── formatCurrency.ts
+│   │   ├── calculateDiscount.ts
+│   │   ├── validation.ts
+│   │   └── storage.ts
+│   │
+│   ├── middleware.ts
+│   └── styles/
+│       └── variables.css
+│
+├── .env.local
+├── next.config.ts
+├── tsconfig.json
+├── package.json
+└── README.md
