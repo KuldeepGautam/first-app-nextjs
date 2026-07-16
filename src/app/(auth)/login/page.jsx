@@ -43,7 +43,7 @@ export default function LoginPage() {
         localStorage.setItem("Token", data.token);
         localStorage.setItem("Username", data.user?.name || "");
         document.cookie = `token=${data.token}; path=/`;
-        router.push("/dashboard");
+        router.push("/profile");
       } else {
         setError(data.message || "Login failed");
       }
