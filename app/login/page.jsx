@@ -32,8 +32,6 @@ export default function LoginPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization:
-            "Bearer $2b$10$TLlqJ0L10PBb90aNfZYoeu/1vqkOg/WKk9/V3DbMFWiI7r6tDJvJ.",
         },
         body: JSON.stringify(formData),
       });
@@ -42,6 +40,9 @@ export default function LoginPage() {
 
       if (data.success) {
         alert("Login Successful!");
+        localStorage.setItem("Token", data.token);
+        localStorage.setItem("Username", data.user?.name || "");
+        document.cookie = `token=${data.token}; path=/`;
         router.push("/dashboard");
       } else {
         setError(data.message || "Login failed");

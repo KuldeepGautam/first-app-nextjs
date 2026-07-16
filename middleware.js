@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
-export function middleware(request) {
+export async function middleware(request) {
 
     const token = request.cookies.get("token")?.value;
 
@@ -10,7 +10,8 @@ export function middleware(request) {
     }
 
     try {
-        jwt.verify(token, process.env.JWT_SECRET);
+        const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+        await jwtVerify(token, secret);
         return NextResponse.next();
     } catch {
         return NextResponse.redirect(new URL("/login", request.url));
