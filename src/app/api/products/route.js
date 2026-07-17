@@ -6,7 +6,7 @@ export async function GET() {
 
     const user = await verifyUser();
 
-    if(!user){ 
+    if (!user) {
         return Response.json(
             { success: false, message: "Unauthorized" },
             { status: 401 }
@@ -26,10 +26,10 @@ export async function GET() {
 
 // Creagte New User
 export async function POST(request) {
-    
+
     const user = await verifyUser();
 
-    if(!user){ 
+    if (!user) {
         return Response.json(
             { success: false, message: "Unauthorized" },
             { status: 401 }
@@ -39,14 +39,14 @@ export async function POST(request) {
     try {
         const body = await request.json();
 
-        const { name, email, age } = body;
+        const { product_name, category, price, stock, status, image, description } = body;
 
-        const [duplicateUser] = await db.query(
-            "SELECT * FROM users WHERE email = ?",
-            [email]
+        const [duplicateProducts] = await db.query(
+            "SELECT * FROM users WHERE product_name = ?",
+            [product_name]
         );
 
-        if (duplicateUser.length > 0) {
+        if (duplicateProducts.length > 0) {
             return Response.json(
                 {
                     success: false,
