@@ -24,7 +24,7 @@ export async function GET() {
     }
 }
 
-// Creagte New User
+// Create New Product
 export async function POST(request) {
 
     const user = await verifyUser();
@@ -39,10 +39,17 @@ export async function POST(request) {
     try {
         const body = await request.json();
 
-        const { product_name, category, price, stock, status, image, description } = body;
+        let { product_name, category, price, stock, status, image, description } = body;
+
+        if (status === 'Active' || status === 'active') {
+            status = 'In Stock';
+        } else if (status === 'Inactive' || status === 'inactive') {
+            status = 'Out of Stock';
+        }
+
 
         const [duplicateProducts] = await db.query(
-            "SELECT * FROM users WHERE product_name = ?",
+            "SELECT * FROM products WHERE product_name = ?",
             [product_name]
         );
 
@@ -50,7 +57,7 @@ export async function POST(request) {
             return Response.json(
                 {
                     success: false,
-                    message: "User already exist..!"
+                    message: "Product already exists!"
                 },
                 {
                     status: 409
@@ -60,25 +67,28 @@ export async function POST(request) {
 
         // Insert into DB
         const [result] = await db.query(
-            "INSERT INTO users (name, email, age) VALUES (?, ?, ?)",
-            [name, email, age]
+            "INSERT INTO products (product_name, category, price, stock, status, image, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [product_name, category, price, stock, status, image, description]
         )
 
         return Response.json(
             {
                 success: true,
-                message: 'Data submitted successfully..!',
+                message: 'Product created successfully!',
                 data: {
                     id: result.insertId,
-                    name,
-                    email,
-                    age
+                    product_name,
+                    category,
+                    price,
+                    stock,
+                    status,
+                    image,
+                    description
                 }
             },
             {
                 status: 201
-            },
-
+            }
         )
     } catch (error) {
         return Response.json(
