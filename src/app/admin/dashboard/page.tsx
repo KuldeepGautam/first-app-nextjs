@@ -1,14 +1,14 @@
 "use client";
 
-import { 
-  IndianRupee, 
-  ShoppingCart, 
-  Users, 
-  Package, 
-  TrendingUp, 
-  Plus, 
-  FolderTree, 
-  Tag, 
+import {
+  IndianRupee,
+  ShoppingCart,
+  Users,
+  Package,
+  TrendingUp,
+  Plus,
+  FolderTree,
+  Tag,
   Settings,
   ChevronRight
 } from "lucide-react";
@@ -118,10 +118,10 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
-        
+
         {/* Main Content Area */}
         <div className="md:col-span-1 lg:col-span-5 space-y-8">
-          
+
           {/* Chart Placeholder */}
           <Card>
             <CardHeader>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
                       <TableCell className="font-medium">{order.id}</TableCell>
                       <TableCell>{order.customer}</TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={order.status === "Delivered" ? "default" : "secondary"}
                           className={order.status === "Delivered" ? "bg-green-600 hover:bg-green-600" : ""}
                         >
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
               </Table>
             </CardContent>
           </Card>
-          
+
         </div>
 
         {/* Sidebar Widgets */}

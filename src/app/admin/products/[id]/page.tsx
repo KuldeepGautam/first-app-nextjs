@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { AdminProductForm } from "../ProductForm";
 
 interface ProductEditPageProps {
@@ -46,8 +47,12 @@ export default function EditProductPage({ params }: ProductEditPageProps) {
       return res.json();
     },
     onSuccess: () => {
+      toast.success("Product updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       router.push("/admin/products");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to update product");
     },
   });
 

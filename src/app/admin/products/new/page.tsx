@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { AdminProductForm } from "../ProductForm";
 
 export default function NewProductPage() {
@@ -26,8 +27,12 @@ export default function NewProductPage() {
       return res.json();
     },
     onSuccess: () => {
+      toast.success("Product created successfully!");
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       router.push("/admin/products");
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to add product");
     },
   });
 

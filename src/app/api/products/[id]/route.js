@@ -86,8 +86,8 @@ export async function PUT(request, { params }) {
 
     if (product_name) {
       const [duplicateProducts] = await db.query(
-        "SELECT * FROM products WHERE product_name = ?",
-        [product_name]
+        "SELECT * FROM products WHERE product_name = ? AND id != ?",
+        [product_name, id]
       );
 
       if (duplicateProducts.length > 0) {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -39,16 +40,20 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert("Login Successful!");
+        toast.success("Login successful!");
         localStorage.setItem("Token", data.token);
         localStorage.setItem("Username", data.user?.name || "");
         document.cookie = `token=${data.token}; path=/`;
         router.push("/profile");
       } else {
-        setError(data.message || "Login failed");
+        const errMsg = data.message || "Login failed";
+        setError(errMsg);
+        toast.error(errMsg);
       }
     } catch (err) {
-      setError(err.message);
+      const errMsg = err.message || "Something went wrong";
+      setError(errMsg);
+      toast.error(errMsg);
     }
 
     setLoading(false);
