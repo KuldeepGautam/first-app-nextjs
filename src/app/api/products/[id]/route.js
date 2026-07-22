@@ -1,14 +1,14 @@
 import { verifyUser } from "../../../lib/auth";
 import db from "../../../lib/db";
 
-// Get User by ID
+// Get Product by ID
 export async function GET(request, { params }) {
 
   const user = await verifyUser();
 
   if (!user) {
     return Response.json(
-      { success: false, message: "Unauthorized" },
+      { success: false, message: "Token is not found." },
       { status: 401 }
     );
   }
@@ -17,7 +17,7 @@ export async function GET(request, { params }) {
     const { id } = await params;
 
     const [rows] = await db.query(
-      "SELECT * FROM users WHERE id = ?",
+      "SELECT * FROM products WHERE id = ?",
       [id]
     );
 
@@ -25,7 +25,7 @@ export async function GET(request, { params }) {
       return Response.json(
         {
           success: false,
-          message: "User not found",
+          message: "Product not found",
         },
         { status: 404 }
       );
@@ -46,14 +46,14 @@ export async function GET(request, { params }) {
   }
 }
 
-// Update user by Ids
+// Update Product by ID
 export async function PUT(request, { params }) {
 
   const user = await verifyUser();
 
   if (!user) {
     return Response.json(
-      { success: false, message: "Unauthorized" },
+      { success: false, message: "Token not found." },
       { status: 401 }
     );
   }
@@ -64,19 +64,19 @@ export async function PUT(request, { params }) {
 
     const body = await request.json();
 
-    const { name, email, age } = body;
+    const { product_name, category, price, stock, status, image, description } = body;
 
-    // Check if user exists
-    const [user] = await db.query(
-      "SELECT * FROM users WHERE id = ?",
+    // Check if product exists
+    const [existingProducts] = await db.query(
+      "SELECT * FROM products WHERE id = ?",
       [id]
     );
 
-    if (user.length === 0) {
+    if (existingProducts.length === 0) {
       return Response.json(
         {
           success: false,
-          message: "User not found...!"
+          message: "Product not found...!"
         },
         {
           status: 404
@@ -84,11 +84,44 @@ export async function PUT(request, { params }) {
       )
     }
 
-    // Update user
-    await db.query(
-      "UPDATE users SET name = ?, email = ?, age = ? WHERE id = ?",
-      [name, email, age, id]
-    );
+    if (product_name) {
+      const [duplicateProducts] = await db.query(
+        "SELECT * FROM products WHERE product_name = ?",
+        [product_name]
+      );
+
+      if (duplicateProducts.length > 0) {
+        return Response.json(
+          {
+            success: false,
+            message: "Product already exists!"
+          },
+          {
+            status: 409
+          }
+        )
+      }
+    }
+
+    const updates = { product_name, category, price, stock, status, image, description };
+    const setClauses = [];
+    const values = [];
+
+    for (const [key, value] of Object.entries(updates)) {
+      if (value !== undefined) {
+        setClauses.push(`${key} = ?`);
+        values.push(value);
+      }
+    }
+
+    if (setClauses.length > 0) {
+      values.push(id);
+      // Update product
+      await db.query(
+        `UPDATE products SET ${setClauses.join(', ')} WHERE id = ?`,
+        values
+      );
+    }
 
     return Response.json(
       {
@@ -113,7 +146,7 @@ export async function PUT(request, { params }) {
   }
 }
 
-// Delete user by ID
+// Delete Product by ID
 export async function DELETE(request, { params }) {
 
   const user = await verifyUser();
@@ -122,7 +155,7 @@ export async function DELETE(request, { params }) {
     return Response.json(
       {
         success: false,
-        message: "Unauthorized"
+        message: "Token not found."
       },
       {
         status: 401
@@ -135,7 +168,7 @@ export async function DELETE(request, { params }) {
 
     // Check if user exists
     const [rows] = await db.query(
-      "SELECT * FROM users WHERE id = ?",
+      "SELECT * FROM products WHERE id = ?",
       [id]
     );
 
@@ -143,7 +176,7 @@ export async function DELETE(request, { params }) {
       return Response.json(
         {
           success: false,
-          message: "User not found...!"
+          message: "Product not found...!"
         },
         {
           status: 404
@@ -151,16 +184,16 @@ export async function DELETE(request, { params }) {
       );
     }
 
-    // Delete user
+    // Delete product
     await db.query(
-      "DELETE FROM users WHERE id = ?",
+      "DELETE FROM products WHERE id = ?",
       [id]
     );
 
     return Response.json(
       {
         success: true,
-        message: "User deleted successfully...!"
+        message: "Product deleted successfully...!"
       },
       {
         status: 200
