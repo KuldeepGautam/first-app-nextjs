@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 
 const recentOrders = [
   { id: "#12345", customer: "Rahul", status: "Delivered", amount: "₹2500" },
@@ -29,10 +30,23 @@ const lowStock = [
   { product: "Laptop Bag", stock: 5 },
 ];
 
+
 const recentCustomers = ["Rahul", "Ankit", "Neha", "Pooja"];
 const topSelling = ["Nike Shoes", "iPhone 16", "Boat Headphones", "Samsung TV"];
 
 export default function AdminDashboard() {
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    async function fetchProductData() {
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setProducts(data);
+    }
+    fetchProductData();
+  }, []);
+
   return (
     <div className="space-y-8">
       <div>
@@ -75,7 +89,7 @@ export default function AdminDashboard() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">315</div>
+            <div className="text-2xl font-bold">{products ? products.length : "No Products available"}</div>
           </CardContent>
         </Card>
       </div>
