@@ -7,6 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import ProductsPage from "../products/page";
 
 // Mock Data
 const recentOrders = [
@@ -18,6 +19,7 @@ const recentOrders = [
 const wishlist = ["Nike Shoes", "iPhone 16", "JBL Speaker"];
 
 export default function CustomerDashboard() {
+
   const [username, setUsername] = useState("");
 
   useEffect(() => {
@@ -30,9 +32,9 @@ export default function CustomerDashboard() {
     }
   }, []);
 
-  const handleAddCart = ( ) => {
+  const handleAddCart = () => {
     alert("Item added to cart!");
-    return ;
+    return;
   }
 
   return (
@@ -84,7 +86,7 @@ export default function CustomerDashboard() {
       </div>
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
-        
+
         {/* Main Content Area */}
         <div className="md:col-span-1 lg:col-span-5 space-y-8">
           {/* Recent Orders */}
@@ -109,7 +111,7 @@ export default function CustomerDashboard() {
                       <TableCell className="font-medium">{order.id}</TableCell>
                       <TableCell>{order.date}</TableCell>
                       <TableCell>
-                        <Badge 
+                        <Badge
                           variant={order.status === "Delivered" ? "default" : "secondary"}
                           className={order.status === "Delivered" ? "bg-green-600 hover:bg-green-600" : ""}
                         >
@@ -128,25 +130,14 @@ export default function CustomerDashboard() {
           <div>
             <h3 className="text-xl font-bold mb-4">🛒 Recommended Products</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((item) => (
-                <Card key={item} className="flex flex-col">
-                  <div className="h-32 bg-muted rounded-t-lg"></div>
-                  <CardHeader className="p-4 pb-2">
-                    <CardTitle className="text-md">Product Card {item}</CardTitle>
-                    <CardDescription>₹1,999</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="p-4 pt-2 mt-auto">
-                    <Button onClick={handleAddCart} className="w-full h-8 text-xs">Add to Cart</Button>
-                  </CardFooter>
-                </Card>
-              ))}
+              <ProductsPage />
             </div>
           </div>
         </div>
 
         {/* Sidebar Widgets */}
         <div className="md:col-span-1 lg:col-span-2 space-y-6">
-          
+
           {/* Quick Actions */}
           <Card>
             <CardHeader>
